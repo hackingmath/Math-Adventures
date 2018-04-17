@@ -1,112 +1,82 @@
-# GameOfLife.pyde
+# cellularAutomata.pyde
 
 from random import choice
 
-width_of_grid = 41
-height_of_grid = 41
+GRID_W = 101
+GRID_H = 101
 
-#size of cell
-sz = 600//width_of_grid + 1
+generation = 0
 
 class Cell:
-    def __init__(self,c,r,on=0):
+    def __init__(self,r,c,on=0):
         self.c = c
         self.r = r
         self.on = on
         
-    def checkNeighbors(self):
-        neighbs = 0 #running sum
-        #check the neighbors above
-        if self.r > 0:
-            if cellList[self.r-1][self.c].on == 1:
-                neighbs += 1           
-            #check the neighbor above and to the left
-            if self.c > 0:
-                if cellList[self.r-1][self.c-1].on == 1:
-                    neighbs += 1
-            
-            #check the neighbor above and to the right
-            if self.c < width_of_grid-1:
-                if cellList[self.r-1][self.c+1].on == 1:
-                    neighbs += 1
-
-        #check the neighbor below
-        if self.r < height_of_grid-1:
-            if cellList[self.r+1][self.c].on == 1:
-                neighbs += 1
-            
-            #check the neighbor below and to the left
-            if self.c > 0:
-                if cellList[self.r+1][self.c-1].on == 1:
-                    neighbs += 1
-            
-            #check the neighbor to the right
-            if self.c < width_of_grid-1:
-                if cellList[self.r+1][self.c+1].on == 1:
-                    neighbs += 1
-
-        #check the neighbor to the left
-        if self.c > 0:
-            if cellList[self.r][self.c-1].on == 1:
-                neighbs += 1
-
-        return neighbs #returns the total number of neighbors
-
-            
-
-    def update(self):
+    def display(self):
         if self.on == 1:
-            fill(0)
+            fill(0) #black
         else:
-            fill(255)
-        rect(sz*self.c,sz*self.r,sz,sz)
+            fill(255) #white
+        rect(SZ*self.r, SZ*self.c, SZ, SZ)
+        
+    def checkNeighbors(self):
+        neighbs = 0  #check the neighbors
+        
+        for dr,dc in [[-1,-1],[-1,0],[-1,1], [1,0], [1,-1],[1,1],[0,-1],[0,1]]:
+            try:
+                if cellList[self.r + dr][self.c + dc].on == 1:
+                    neighbs += 1
+            except IndexError:
+                continue
+        if self.on == 1: 
+            if neighbs in [2,3]:
+                return 1
+            
+            return 0
+        if neighbs == 3:
+            return 1
+        return 0
 
-    
+
+
 def setup():
-    global cellList
-    size(600,600)
+    global SZ, cellList
     noStroke()
+    size(800,800)
+    SZ = width // GRID_W + 1
     cellList = createCellList()
     
 def draw():
-    global cellList,level
+    global generation,cellList
     frameRate(10)
-
-    newList = [] #create a new list for the next gen
+    cellList = update(cellList)
+    for row in cellList:
+        for cell in row:
+            cell.display()
+    generation += 1
+    # if generation == 30:
+    #     generation = 1
+    #     cellList = createCellList()
+    #     loop()
+        
+def update(cellList):
+    newList = []
     for r,row in enumerate(cellList):
-        newList.append([]) #add empty row
+        newList.append([])
         for c,cell in enumerate(row):
-            if cell.on == 0: #if cell is off
-                #check neighbs and append new value
-                newList[r].append(Cell(c,r,cell.checkNeighbors()))
-            else: #on cells stay on
-                newList[r].append(Cell(c,r,1))
-    cellList = newList[::]
-    level += 1
-    for row in cellList:
-        for cell in row:
-            cell.update()
-    if level == 24:
-        cellList = createCellList()
-    for row in cellList:
-        for cell in row:
-            cell.update()
-    if level == 24:
-        cellList = createCellList()
-
+            newList[r].append(Cell(r,c,cell.checkNeighbors()))
+    return newList[::]
+        
 
 def createCellList():
     '''Creates a big list of off cells with
-    one on Cell in the center'''
-    global cellList, level
-    cellList=[]#empty list for cells
-
+    one on Cell in the center '''
+    newList=[]#empty list for cells 
     #populate the initial cell list
-    for j in range(height_of_grid):
-        cellList.append([]) #add empty row
-        for i in range(width_of_grid):
-            onoff = choice([0,1]) #randomly on or off
-            cellList[j].append(Cell(i,j,onoff))
+    for j in range(GRID_H): 
+        newList.append([]) #add empty row 
+        for i in range(GRID_W):
+            newList [j].append(Cell(i,j,choice([0,1]))) #add off Cells or zeroes 
 
-    level = 0
-    return cellList
+    return newList
