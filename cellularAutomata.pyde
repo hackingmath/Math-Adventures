@@ -7,7 +7,7 @@ GRID_H = 41
 generation = 0
 
 class Cell:
-    def __init__(self,c,r,on=0):
+    def __init__(self,r,c,on=0):
         self.c = c
         self.r = r
         self.on = on
@@ -17,7 +17,7 @@ class Cell:
             fill(0) #black
         else:
             fill(255) #white
-        rect(SZ*self.c, SZ*self.r, SZ, SZ)
+        rect(SZ*self.r, SZ*self.c, SZ, SZ)
         
     def checkNeighbors(self):
         neighbs = 0  #check the neighbors
