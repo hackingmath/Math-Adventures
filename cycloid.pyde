@@ -17,26 +17,29 @@ def draw():
     background(255) #white
     strokeWeight(2)
     stroke(150)
-    line(0,ground,width,ground)
+    line(0,ground,width,ground) #line for the "ground"
     noFill()
     ellipse(x,Y,2*r,2*r)
+    #calculate position of drawing "dot"
     dot = PVector(x+r*cos(v*TWO_PI*t+PI/2),Y+r*sin(TWO_PI*v*t+PI/2))
+    #save that position to the points list, to be drawn later
     points.append(dot)
-    line(dot.x,dot.y,x,Y)
-    fill(255,0,0)
+    line(dot.x,dot.y,x,Y) #radial segment
+    fill(255,0,0) #red dot
     ellipse(dot.x,dot.y,10,10)
+    #loop through the points list to draw the curve
     for i,pt in enumerate(points):
         if i < len(points) - 2:
             stroke(255,0,0)
             line(pt.x,pt.y,points[i+1].x,points[i+1].y)
     x += TWO_PI*r*dt*v #update x-value by velocity
-    if x > width:
+    if x > width: #when the wheel gets all the way to the right
         noLoop()
         x = 0.0
         points = []
     println(x)
     println(dot.x)
     t += dt
-    if frameCount % 2 == 0:
+    if frameCount % 2 == 0: #This is for saving screenshots to make a .gif
         saveFrame('####.png')
     
