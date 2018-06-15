@@ -34,12 +34,12 @@ def draw():
             line(pt.x,pt.y,points[i+1].x,points[i+1].y)
     x += TWO_PI*r*dt*v #update x-value by velocity
     if x > width: #when the wheel gets all the way to the right
-        noLoop()
-        x = 0.0
-        points = []
-    println(x)
-    println(dot.x)
-    t += dt
-    if frameCount % 2 == 0: #This is for saving screenshots to make a .gif
-        saveFrame('####.png')
+        #noLoop() # uncomment this out to only run it once
+        x = 0.0 # reset position all the way to the left
+        points = [] # erase the trail
+    #println(x) #just for testing
+    #println(dot.x)
+    t += dt #increment the time variable
+    '''if frameCount % 2 == 0: #This is for saving screenshots to make a .gif
+        saveFrame('####.png')'''
     
