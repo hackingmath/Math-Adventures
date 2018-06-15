@@ -1,7 +1,7 @@
 '''Web/Vortex of Circles
 June 14, 2018'''
 
-factor = 1.2
+factor = 1.3
 
 def setup():
     size(600,600)
@@ -23,7 +23,7 @@ def draw():
     #uncomment these lines to save screenshots:
     '''saveFrame('####.png')'''
     if factor <= 1.07:
-        noLoop()
+        factor = 1.3 #noLoop() #will stop the loop
     
 def vortex(r,level):
     num = 30 #number of circles in one ring
