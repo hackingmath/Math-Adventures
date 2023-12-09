@@ -78,6 +78,18 @@ def multmatrix(a,b):
         newmatrix.append(row)
     return newmatrix
 
+def transpose(a):
+    '''Transposes matrix a'''
+    output = list()
+    m = len(a)
+    n = len(a[0])
+    #create an n x m matrix
+    for i in range(n):
+        output.append([])
+        for j in range(m):
+            #replace a[i][j] with a[j][i]
+            output[i].append(a[j][i])
+    return output
 
 def rottilt(rot,tilt):
     '''returns the matrix for rotating a number of degrees.'''
